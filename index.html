@@ -1,0 +1,627 @@
+<title>Eva's Unit 2 Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: one narrow worksheet column. Each activity is one card of question rows.
+   Every question has listen buttons; a fixed bottom bar holds the one main action. */
+:root{
+  --bg:#EDF3F5; --card:#FFFFFF; --ink:#14272E; --muted:#50656C; --line:#D2DEE2;
+  --accent:#0A7C7A; --accent-ink:#FFFFFF; --accent-soft:#DDF3F1;
+  --hl:#FFD84D;
+  --ok:#157A4B; --ok-soft:#DDF3E7; --ok-wash:#F0FAF4;
+  --bad:#C23A32; --bad-soft:#FBE3E1; --bad-wash:#FDF2F1;
+  --redo-wash:#FFF8DD;
+  --font-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --font-body:'Nunito','Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1A1F; --card:#13262C; --ink:#E6F2F3; --muted:#93AEB4; --line:#26414A;
+    --accent:#5DD6CF; --accent-ink:#0C1A1F; --accent-soft:#17383F;
+    --hl:#7A6400;
+    --ok:#5CD59A; --ok-soft:#173A2B; --ok-wash:#132A22;
+    --bad:#FF8A82; --bad-soft:#44201F; --bad-wash:#2A1A22;
+    --redo-wash:#2B2A14;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1A1F; --card:#13262C; --ink:#E6F2F3; --muted:#93AEB4; --line:#26414A;
+  --accent:#5DD6CF; --accent-ink:#0C1A1F; --accent-soft:#17383F;
+  --hl:#7A6400;
+  --ok:#5CD59A; --ok-soft:#173A2B; --ok-wash:#132A22;
+  --bad:#FF8A82; --bad-soft:#44201F; --bad-wash:#2A1A22;
+  --redo-wash:#2B2A14;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:24px 150px}
+.wrap{max-width:720px;margin-inline:auto;display:flex;flex-direction:column;gap:20px;min-width:0}
+h1,h2,h3,p,ul{margin:0}
+ul{padding:0;list-style:none}
+mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:inherit;padding:0 .12em}
+.kicker{font-size:.78rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+
+header.top{display:flex;flex-direction:column;gap:10px}
+h1{font:800 clamp(2rem,7vw,2.8rem)/1.05 var(--font-display);text-wrap:balance;letter-spacing:-.01em}
+.lede{color:var(--muted);font-weight:600}
+.how{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.how li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.92rem;font-weight:600;flex:1 1 200px;min-width:0}
+.how b{font-family:var(--font-display);color:var(--accent)}
+
+.jump{display:flex;flex-wrap:wrap;gap:6px}
+.jump button{min-width:44px;min-height:36px;padding:4px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:800 .85rem var(--font-display);cursor:pointer}
+.jump button.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.jump button.todo{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.summary{background:var(--card);border:1.5px solid var(--accent);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:16px}
+.label{font-size:.75rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.sum-top{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:flex-end}
+.big{font:800 3.2rem/1 var(--font-display);font-variant-numeric:tabular-nums}
+.big .of{font-size:1.5rem;color:var(--muted)}
+.rating{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;border:1.5px solid var(--line);font:800 1rem var(--font-display)}
+.rating.r-excellent{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.rating.r-passed{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.rating.r-review{background:var(--redo-wash);border-color:var(--hl);color:var(--ink)}
+.rtag{font-weight:800}
+.rtag.r-excellent{color:var(--ok)}
+.rtag.r-passed{color:var(--accent)}
+.sum-meta{display:flex;flex-direction:column;gap:2px;font-weight:600;font-size:.95rem}
+.sum-meta b{font-variant-numeric:tabular-nums}
+.pips{display:inline-flex;gap:4px;vertical-align:middle;margin-right:4px}
+.pip{width:12px;height:12px;border-radius:50%;border:2px solid var(--accent)}
+.pip.on{background:var(--accent)}
+.meter{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .4s}
+.msg{font-weight:700}
+.weak ul{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.weak button{min-height:40px;padding:6px 12px;border-radius:10px;border:1.5px solid var(--bad);background:var(--bad-soft);color:var(--bad);font:700 .9rem var(--font-body);cursor:pointer;text-align:left}
+.weak button b{font-variant-numeric:tabular-nums}
+
+main{display:flex;flex-direction:column;gap:20px;min-width:0}
+.chapter{display:flex;flex-direction:column;gap:4px;padding-top:12px}
+h2{font:800 1.7rem/1.15 var(--font-display);text-wrap:balance}
+.chtopics{color:var(--muted);font-weight:600}
+.act{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;scroll-margin-top:16px}
+.act-head{display:flex;gap:12px;align-items:center;padding:14px 16px}
+.code{flex:none;min-width:46px;height:40px;padding-inline:8px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:800 1.1rem var(--font-display);display:grid;place-items:center}
+.act-titles{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+h3{font:800 1.15rem/1.2 var(--font-display)}
+.topic{font-size:.9rem;color:var(--muted);font-weight:600}
+.topic .lbl{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-right:4px}
+.topic mark{color:var(--ink);font-weight:800}
+.sec-score{flex:none;font:800 .95rem var(--font-display);font-variant-numeric:tabular-nums;color:var(--muted);text-align:right}
+.instr{display:flex;gap:10px;align-items:flex-start;padding:0 16px 12px;font-weight:600}
+.instr span{flex:1;min-width:0;padding-top:6px}
+.hint{margin:0 16px 12px;padding:10px 12px;border-radius:10px;background:var(--redo-wash);border:1.5px dashed var(--hl);font-weight:600;font-size:.95rem}
+.hint b{font-weight:800}
+.qs{display:flex;flex-direction:column}
+
+/* listen buttons */
+.spk{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 14px 6px 10px;border-radius:999px;border:1.5px solid var(--accent);background:var(--card);color:var(--accent);font:800 .9rem var(--font-body);cursor:pointer;flex:none}
+.spk svg{width:20px;height:20px;flex:none;fill:currentColor}
+.spk .stopi{display:none}
+.spk.playing{background:var(--accent);color:var(--accent-ink)}
+.spk.playing .playi{display:none}
+.spk.playing .stopi{display:block}
+.spk.ans{border-color:var(--ok);color:var(--ok)}
+.spk.ans.playing{background:var(--ok);color:var(--accent-ink)}
+.spk.ico{padding:0;width:40px;justify-content:center}
+.aud{display:flex;flex-wrap:wrap;gap:8px;padding-left:38px}
+
+.q{display:grid;gap:10px;padding:14px 16px;border-top:1px solid var(--line);scroll-margin-top:16px;min-width:0}
+.q[data-st="right"]{background:var(--ok-wash)}
+.q[data-st="wrong"]{background:var(--bad-wash)}
+.q[data-st="redo"]{background:var(--redo-wash)}
+.q-head{display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:10px;row-gap:4px;align-items:start}
+.num{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:800 .85rem var(--font-display);display:grid;place-items:center}
+.prompt{font-weight:700;font-size:1.05rem;overflow-wrap:anywhere}
+.tag{grid-column:2;justify-self:start;font-size:.72rem;font-weight:800;letter-spacing:.04em;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.blank{display:inline-block;min-width:3.4em;padding:0 .3em;border-bottom:2.5px solid var(--accent);color:var(--accent);font-weight:800;text-align:center}
+.blank.ok{color:var(--ok);border-color:var(--ok)}
+.blank.bad{color:var(--bad);border-color:var(--bad)}
+.opts{display:flex;flex-wrap:wrap;gap:8px;padding-left:38px}
+.opts.stack{flex-direction:column;align-items:stretch}
+.opt{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font:700 1rem/1.25 var(--font-body);cursor:pointer;transition:background .12s,border-color .12s;min-width:0}
+.opt input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:inherit}
+.opt span{min-width:0;overflow-wrap:anywhere}
+.opt .ltr{flex:none;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:800 .8rem var(--font-display);display:grid;place-items:center}
+.opts.stack .opt{border-radius:12px;justify-content:flex-start;text-align:left}
+.opt:hover:not(.dis){background:var(--accent-soft);border-color:var(--accent)}
+.opt:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+.opt.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.opt.on .ltr{background:var(--accent-ink);color:var(--accent)}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.opt.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.opt.rev{border-style:dashed;border-color:var(--ok);color:var(--ok)}
+.opt.ok::after,.opt.rev::after{content:"\2713";font-weight:800;margin-left:auto}
+.opt.bad::after{content:"\2715";font-weight:800;margin-left:auto}
+.opt.dis{cursor:default}
+.fb{padding-left:38px;font-weight:700;font-size:.92rem}
+.fb:empty{display:none}
+.q[data-st="right"] .fb{color:var(--ok)}
+.q[data-st="wrong"] .fb{color:var(--bad)}
+.q[data-st="redo"] .fb{color:var(--muted)}
+
+.write{display:flex;flex-direction:column;gap:12px;padding:0 16px 16px}
+textarea{width:100%;min-height:170px;padding:12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:600 1rem/1.5 var(--font-body);resize:vertical}
+.checks{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.checks legend{padding:0;margin-bottom:6px;font-weight:800}
+.checks label{display:flex;gap:10px;align-items:flex-start;font-weight:600;min-height:32px}
+.checks input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--card);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.bar-in{max-width:720px;margin-inline:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.bar-msg{flex:1 1 180px;min-width:0;font-weight:700;font-variant-numeric:tabular-nums}
+.note{flex:1 1 100%;padding:8px 12px;border-radius:10px;background:var(--bad-soft);color:var(--bad);font-weight:700;font-size:.9rem}
+.go{flex:0 0 auto;min-height:46px;padding:10px 20px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:800 1rem var(--font-display);cursor:pointer}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:480px){.opts,.aud,.fb{padding-left:0}.big{font-size:2.6rem}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="kicker">Class 5A · English · Unit 2</p>
+    <h1>Eva's <mark>Unit 2</mark> Review</h1>
+    <p class="lede">Different people and things: Chapter 3 Describing people, Chapter 4 Lost and found</p>
+    <ul class="how">
+      <li><b>1.</b> Tap an answer for every question. Press the speaker buttons to listen.</li>
+      <li><b>2.</b> Press Check to see your score out of <span id="howTotal">60</span>.</li>
+      <li><b>3.</b> Fix your wrong answers. You get <b>2 redo chances</b>.</li>
+    </ul>
+  </header>
+
+  <nav class="jump" id="jump" aria-label="Jump to an activity"></nav>
+
+  <section id="summary" class="summary" hidden>
+    <div class="sum-top">
+      <div>
+        <p class="label">Your score</p>
+        <p class="big"><span id="score">0</span><span class="of"> / <span id="total">60</span></span></p>
+        <p class="rating" id="rating"></p>
+      </div>
+      <div class="sum-meta">
+        <p>First try: <b id="first">0</b> <span class="rtag" id="firstRate"></span></p>
+        <p>Redo chances used: <span class="pips" id="pips"><span class="pip"></span><span class="pip"></span></span><b id="used">0 of 2</b></p>
+      </div>
+    </div>
+    <div class="meter" id="meter" role="img" aria-label="Score"><i id="fill"></i></div>
+    <p class="msg" id="msg"></p>
+    <div class="weak" id="weak" hidden>
+      <p class="label">Practise these topics</p>
+      <ul id="weakList"></ul>
+    </div>
+  </section>
+
+  <main id="main"></main>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <p class="note" id="note" role="status" hidden></p>
+    <p class="bar-msg" id="barMsg"></p>
+    <button class="go" id="go" type="button">Check my answers</button>
+  </div>
+</div>
+
+<script>
+/* Unit 2 questions. Options are listed in the order they are shown and read aloud.
+   p  = prompt ({} marks the gap)       c = correct answer(s)      o = options
+   t  = optional label for the question  q / a / os = optional spoken overrides */
+var UNIT2 = {
+  chapters: {
+    3: ['Chapter 3', 'Describing people', 'with / in · who · the play'],
+    4: ['Chapter 4', 'Lost and found', 'Possessive pronouns · Whose / Who’s · Adverbs after said']
+  },
+  sections: [
+    { code: '3A', ch: 3, title: 'Write with or in', topic: 'with / in', page: 'p.32', tag: 'with / in',
+      instr: 'Choose with or in.',
+      hint: 'Use with for body parts and accessories (the long face, the sunglasses, the beard, the scarf). Use in for clothing items (the cardigan, the suit).',
+      items: [
+        { p: 'Who’s the man {} the long face? That’s my dad.', c: 'with', o: ['with', 'in'] },
+        { p: 'Who’s the woman {} the cardigan? That’s my mum.', c: 'in', o: ['with', 'in'] },
+        { p: 'Who’s the girl {} the straight black hair?', c: 'with', o: ['with', 'in'] },
+        { p: 'Who’s the boy {} the green suit and hat?', c: 'in', o: ['with', 'in'] },
+        { p: 'Who’s the man {} the sunglasses?', c: 'with', o: ['with', 'in'] },
+        { p: 'Who’s the lady {} the scarf?', c: 'with', o: ['with', 'in'] },
+        { p: 'He’s the pirate {} the black moustache and long curly hair.', c: 'with', o: ['with', 'in'] }
+      ] },
+    { code: '3B', ch: 3, title: 'Sort the words', topic: 'with / in', page: 'p.31', tag: 'Sort: with or in',
+      instr: 'Sort the words. Do we use with or in before each phrase?',
+      hint: 'with = body parts and accessories (a long face, a beard, a bow tie, sunglasses, glasses, a moustache, curly blonde hair). in = clothing items (a cardigan, a vest, mittens, a suit, gloves).',
+      items: [
+        { p: 'a long face', c: 'with', o: ['with', 'in'], q: 'a long face. Do we use with, or in?', a: 'a long face. We use with.' },
+        { p: 'a cardigan', c: 'in', o: ['with', 'in'], q: 'a cardigan. Do we use with, or in?', a: 'a cardigan. We use in.' },
+        { p: 'a beard', c: 'with', o: ['with', 'in'], q: 'a beard. Do we use with, or in?', a: 'a beard. We use with.' },
+        { p: 'a bow tie', c: 'with', o: ['with', 'in'], q: 'a bow tie. Do we use with, or in?', a: 'a bow tie. We use with.' },
+        { p: 'mittens', c: 'in', o: ['with', 'in'], q: 'mittens. Do we use with, or in?', a: 'mittens. We use in.' },
+        { p: 'sunglasses', c: 'with', o: ['with', 'in'], q: 'sunglasses. Do we use with, or in?', a: 'sunglasses. We use with.' },
+        { p: 'a vest', c: 'in', o: ['with', 'in'], q: 'a vest. Do we use with, or in?', a: 'a vest. We use in.' },
+        { p: 'curly blonde hair', c: 'with', o: ['with', 'in'], q: 'curly blonde hair. Do we use with, or in?', a: 'curly blonde hair. We use with.' },
+        { p: 'a suit', c: 'in', o: ['with', 'in'], q: 'a suit. Do we use with, or in?', a: 'a suit. We use in.' },
+        { p: 'glasses', c: 'with', o: ['with', 'in'], q: 'glasses. Do we use with, or in?', a: 'glasses. We use with.' },
+        { p: 'gloves', c: 'in', o: ['with', 'in'], q: 'gloves. Do we use with, or in?', a: 'gloves. We use in.' },
+        { p: 'a moustache', c: 'with', o: ['with', 'in'], q: 'a moustache. Do we use with, or in?', a: 'a moustache. We use with.' }
+      ] },
+    { code: '3C', ch: 3, title: 'Write who', topic: 'Relative pronoun: who', page: 'p.34', tag: 'Relative pronoun: who',
+      instr: 'Choose the missing word.',
+      hint: 'who (here) is a relative pronoun, not a question word. It adds information about a person. Pattern: name + is + the girl / boy + who + is + verb-ing.',
+      items: [
+        { p: 'Wendy is the girl {} is collecting seaweed.', c: 'who', o: ['who', 'whose', 'which'] },
+        { p: 'Matt is the boy {} is speaking at the Speech Contest.', c: 'who', o: ['which', 'who', 'whose'] },
+        { p: 'Those are the boys {} are painting pictures.', c: 'who', o: ['whose', 'which', 'who'] },
+        { p: 'Dan is the boy {} is running towards the finishing line.', c: 'who', o: ['who', 'which', 'whose'] }
+      ] },
+    { code: '3D', ch: 3, title: 'Join the sentences with who', topic: 'Relative pronoun: who', page: 'p.34', tag: 'Join with who',
+      instr: 'Join the two sentences with who. Choose the correct sentence.',
+      hint: 'Pattern: name + is + the girl / boy + who + is + verb-ing. Do not add he or she after who.',
+      items: [
+        { p: 'Wendy is a girl. She is collecting seaweed on the beach.', c: 'Wendy is the girl who is collecting seaweed on the beach.',
+          o: ['Wendy is the girl who she is collecting seaweed on the beach.', 'Wendy is the girl who is collecting seaweed on the beach.', 'Wendy is the girl whose is collecting seaweed on the beach.'],
+          q: 'Wendy is a girl. She is collecting seaweed on the beach. Join the sentences with who.' },
+        { p: 'Jack is a boy. He is eating candyfloss at the school fair.', c: 'Jack is the boy who is eating candyfloss at the school fair.',
+          o: ['Jack is the boy who eating candyfloss at the school fair.', 'Jack is the boy who he is eating candyfloss at the school fair.', 'Jack is the boy who is eating candyfloss at the school fair.'],
+          q: 'Jack is a boy. He is eating candyfloss at the school fair. Join the sentences with who.' },
+        { p: 'Mia is a girl. She is receiving a trophy.', c: 'Mia is the girl who is receiving a trophy.',
+          o: ['Mia is the girl who is receiving a trophy.', 'Mia is the girl who she is receiving a trophy.', 'Mia is the girl is who receiving a trophy.'],
+          q: 'Mia is a girl. She is receiving a trophy. Join the sentences with who.' }
+      ] },
+    { code: '3E', ch: 3, title: 'Questions about the play', topic: 'Reading: the play', page: 'pp.28–29', tag: 'Reading: the play',
+      instr: 'Answer the questions about the play (pp.28–29).',
+      hint: 'Read the play on pp.28–29 again. Find who Captain Hook’s enemy is, what the friends do with the masks, and how the pirates feel.',
+      items: [
+        { p: 'Who is Captain Hook’s biggest enemy?', c: 'Peter Pan', o: ['Wendy Darling', 'Peter Pan', 'Tinker Bell', 'Smee'], a: 'Peter Pan.' },
+        { p: 'Who is the girl who is collecting seaweed?', c: 'Wendy Darling', o: ['Tinker Bell', 'Tiger Lily', 'Wendy Darling'], a: 'Wendy Darling.' },
+        { p: 'How do Peter and his friends trick the pirates? They {}',
+          c: 'make Captain Hook masks and put them on, so the pirates can’t tell who the real Captain Hook is.',
+          o: ['hide behind the rocks and wait until it is night.', 'make Captain Hook masks and put them on, so the pirates can’t tell who the real Captain Hook is.', 'give the pirates a lot of gold and jewellery.'],
+          q: 'How do Peter and his friends trick the pirates?' },
+        { p: 'How do the pirates feel at the end? Why?',
+          c: 'They feel scared because they don’t know who the real Captain Hook is, so they run away.',
+          o: ['They feel happy because they win the treasure.', 'They feel angry because Peter Pan takes their ship.', 'They feel scared because they don’t know who the real Captain Hook is, so they run away.'] }
+      ] },
+
+    { code: '4A', ch: 4, title: 'Write mine, yours, his, hers, ours or theirs', topic: 'Possessive pronouns', page: 'p.43', tag: 'Possessive pronoun',
+      instr: 'Choose mine, yours, his, hers, ours or theirs.',
+      hint: 'Possessive pronouns stand alone and show who something belongs to: mine, yours, his, hers, ours, theirs. my comes before a noun (my towel). mine stands alone (The towel is mine).',
+      items: [
+        { p: 'These are Danny’s goggles. They’re {}.', c: 'his', o: ['mine', 'yours', 'his', 'hers', 'ours', 'theirs'] },
+        { p: 'These earrings belong to Emma. They’re {}.', c: 'hers', o: ['mine', 'yours', 'his', 'hers', 'ours', 'theirs'] },
+        { p: 'My brother and I lost our rackets. They’re {}.', c: 'ours', o: ['mine', 'yours', 'his', 'hers', 'ours', 'theirs'] },
+        { p: 'Mr and Mrs White lost their shuttlecocks. They’re {}.', c: 'theirs', o: ['mine', 'yours', 'his', 'hers', 'ours', 'theirs'] },
+        { p: 'Is this pen {}, Alan?', c: 'yours', o: ['mine', 'yours', 'his', 'hers', 'ours', 'theirs'] },
+        { p: 'Is this pen yours, Alan? Yes, it’s {}.', c: 'mine', o: ['mine', 'yours', 'his', 'hers', 'ours', 'theirs'] },
+        { p: '“Are these headphones yours, Jill?” “No, they aren’t {}. They’re Jane’s.”', c: 'mine', o: ['mine', 'yours', 'his', 'hers', 'ours', 'theirs'] }
+      ] },
+    { code: '4B', ch: 4, title: 'Circle Whose or Who’s', topic: 'Whose / Who’s', page: 'p.46', tag: 'Whose / Who’s',
+      instr: 'Choose Whose or Who’s.',
+      hint: 'whose = possession (Whose backpack is this?). who’s = who is (Who’s the girl with the sunglasses?).',
+      items: [
+        { p: '{} backpack is this?', c: 'Whose', o: ['Whose', 'Who’s'],
+          os: 'Whose, spelled W, H, O, S, E. Or, who’s, which means who is.',
+          a: 'Whose backpack is this? The answer is whose, with an e: W, H, O, S, E.' },
+        { p: '{} the girl with the sunglasses?', c: 'Who’s', o: ['Whose', 'Who’s'],
+          os: 'Whose, spelled W, H, O, S, E. Or, who’s, which means who is.',
+          a: 'Who’s the girl with the sunglasses? The answer is who’s, which means who is.' },
+        { p: '{} rackets are these?', c: 'Whose', o: ['Whose', 'Who’s'],
+          os: 'Whose, spelled W, H, O, S, E. Or, who’s, which means who is.',
+          a: 'Whose rackets are these? The answer is whose, with an e: W, H, O, S, E.' },
+        { p: '{} the boy who is speaking at the Speech Contest?', c: 'Who’s', o: ['Whose', 'Who’s'],
+          os: 'Whose, spelled W, H, O, S, E. Or, who’s, which means who is.',
+          a: 'Who’s the boy who is speaking at the Speech Contest? The answer is who’s, which means who is.' },
+        { p: '{} shuttlecocks are these?', c: 'Whose', o: ['Whose', 'Who’s'],
+          os: 'Whose, spelled W, H, O, S, E. Or, who’s, which means who is.',
+          a: 'Whose shuttlecocks are these? The answer is whose, with an e: W, H, O, S, E.' }
+      ] },
+    { code: '4C', ch: 4, title: 'The Moon Building notices', topic: 'Possessive pronouns', page: 'p.46', tag: 'Possessive pronoun',
+      instr: 'Look at the notices and answer. Choose his, hers or theirs.',
+      hint: 'his = belongs to one man. hers = belongs to one woman. theirs = belongs to more than one person.',
+      items: [
+        { p: 'Whose gold ring is this? (Mr Ma lost it.) I think it’s {}.', c: 'his', o: ['his', 'hers', 'theirs'] },
+        { p: 'Whose silver earrings are these? (Miss Chow lost them.) I think they’re {}.', c: 'hers', o: ['his', 'hers', 'theirs'] },
+        { p: 'Whose diamond wedding rings are these? (Mr and Mrs Chan lost them.) I think they’re {}.', c: 'theirs', o: ['his', 'hers', 'theirs'] },
+        { p: 'Whose tennis rackets are these? (Mr Ko lost them.) I think they’re {}.', c: 'his', o: ['his', 'hers', 'theirs'] },
+        { p: 'Whose crystal bracelet is this? (Miss Ling lost it.) I think it’s {}.', c: 'hers', o: ['his', 'hers', 'theirs'] }
+      ] },
+    { code: '4D', ch: 4, title: 'The story of Mia and Sara', topic: 'Reading: Mia and Sara', page: 'pp.40–41', tag: 'Reading: Mia and Sara',
+      instr: 'Answer the questions about the story of Mia and Sara (pp.40–41).',
+      hint: 'Read the story on pp.40–41 again. Mia told the truth. Sara said the ring was hers, but it was not.',
+      items: [
+        { p: 'Whose necklace fell into the lake?', c: 'Mia’s', o: ['Sara’s', 'Mia’s', 'The mermaid’s'], a: 'Mia’s necklace fell into the lake.' },
+        { p: 'Why did the mermaid give Mia the bracelet and the earrings too? Because Mia was {}.', c: 'honest', o: ['honest', 'dishonest', 'greedy'] },
+        { p: 'Why did the mermaid throw the diamond ring back into the lake? Because Sara was {}.', c: 'dishonest', o: ['honest', 'dishonest', 'greedy'] },
+        { p: '“That’s {}!” said Mia gratefully. (her necklace)', c: 'mine', o: ['mine', 'hers', 'ours', 'yours'] },
+        { p: '“This jewellery is {},” Mia said to her sister. (Mia’s and Sara’s)', c: 'ours', o: ['mine', 'theirs', 'ours', 'hers'] },
+        { p: 'What can we learn from the story?', c: 'Be honest.', o: ['Always keep things that aren’t yours.', 'Be honest.', 'Never go near a lake.', 'Rings are better than necklaces.'], a: 'Be honest.' }
+      ] },
+    { code: '4E', ch: 4, title: 'Add an adverb after said', topic: 'Adverbs after said', page: 'p.48', tag: 'Adverb after said',
+      instr: 'Add an adverb after said. Choose the adverb that fits the feeling.',
+      hint: 'Add an adverb after said to show how someone speaks (said Mia angrily). Match the adverb to the feeling in the sentence.',
+      items: [
+        { p: '“I lost my jewellery,” Mia told the mermaid {}.', c: 'sadly', o: ['gratefully', 'sadly', 'happily', 'excitedly', 'angrily'] },
+        { p: '“Thank you!” said Mia {}.', c: 'gratefully', o: ['gratefully', 'sadly', 'happily', 'excitedly', 'angrily'] },
+        { p: '“It’s mine!” said Sara {}.', c: 'excitedly', o: ['gratefully', 'sadly', 'happily', 'excitedly', 'angrily'] },
+        { p: '“This jewellery is ours,” Mia said {}.', c: 'happily', o: ['gratefully', 'sadly', 'happily', 'excitedly', 'angrily'] },
+        { p: '“Grrr, that’s Peter Pan,” said Captain Hook {}.', c: 'angrily', o: ['gratefully', 'sadly', 'happily', 'excitedly', 'angrily'] }
+      ] },
+    { code: '4F', ch: 4, title: 'Don’t repeat the same adjective', topic: 'Adjectives', page: 'p.48', tag: 'Adjective: don’t repeat',
+      instr: 'Don’t repeat the same adjective. Mia was a nice girl, so choose a different word.',
+      hint: 'Don’t repeat the same word. nice is already used, so choose kind, lovely or good.',
+      items: [
+        { p: 'Mia was a nice girl. She had a {} sister.', c: ['kind', 'lovely', 'good'], o: ['kind', 'nice', 'good', 'lovely'] },
+        { p: 'Mia was a nice girl. She had a nice sister and a {} father.', c: ['kind', 'lovely', 'good'], o: ['nice', 'lovely', 'kind', 'good'] }
+      ] }
+  ]
+};
+if (typeof module !== 'undefined') module.exports = UNIT2;
+
+</script>
+<script>
+(function(){
+'use strict';
+var U=UNIT2, CH=U.chapters, S=U.sections;
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function fmt(it){var c=it.correct;return c.length>1?c.slice(0,-1).join(', ')+' or '+c[c.length-1]:c[0];}
+
+var ICON='<svg class="playi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>'+
+  '<svg class="stopi" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+function spk(clip,label,cls,hidden,iconOnly){
+  return '<button type="button" class="spk'+(cls?' '+cls:'')+(iconOnly?' ico':'')+'" data-clip="'+clip+'" aria-pressed="false" aria-label="'+esc(label)+'"'+(hidden?' hidden':'')+'>'+ICON+(iconOnly?'':'<span>'+esc(label)+'</span>')+'</button>';
+}
+
+/* ---------- build data ---------- */
+var items=[], byId={};
+S.forEach(function(sec){
+  sec.items=sec.items.map(function(o,i){
+    var stack=o.o.some(function(x){return x.length>22;});
+    var it={id:sec.code+'-'+(i+1),sec:sec,n:i+1,prompt:o.p,correct:Array.isArray(o.c)?o.c:[o.c],opts:o.o,
+            tag:o.t||sec.tag,stack:stack,noFill:stack||o.p.indexOf('{}')<0};
+    items.push(it);byId[it.id]=it;return it;
+  });
+});
+var TOTAL=items.length;
+
+var WRITE='<section class="act" id="act-4G"><header class="act-head"><span class="code">4G</span><div class="act-titles"><h3>Write a short story</h3><p class="topic"><span class="lbl">Topic</span> <mark>Story writing</mark> · p.48</p></div><span class="sec-score">Not scored</span></header>'+
+ '<p class="instr"><span>Write a short story in your notebook, or type it here. Use an adverb after said.</span></p>'+
+ '<div class="write"><label class="sr" for="story">My short story</label>'+
+ '<textarea id="story" placeholder="Beginning: ... and ... were ... One day, they found a ...&#10;Middle: “Whose ... is this?” asked ... “Maybe it’s ...,” said ... (adverb).&#10;Ending: They gave the ... back to ... “Thank you!” said ... (adverb).&#10;What we learn: We should be ..."></textarea>'+
+ '<fieldset class="checks"><legend>Tick when your story has:</legend>'+
+ '<label for="c1"><input type="checkbox" id="c1"><span>The question “Whose ___ is this?”</span></label>'+
+ '<label for="c2"><input type="checkbox" id="c2"><span>Maybe it’s hers / his / theirs</span></label>'+
+ '<label for="c3"><input type="checkbox" id="c3"><span>An adverb after said (said Mia gratefully)</span></label>'+
+ '<label for="c4"><input type="checkbox" id="c4"><span>A different adjective each time (not nice, nice, nice)</span></label>'+
+ '<label for="c5"><input type="checkbox" id="c5"><span>What we learn: We should be …</span></label>'+
+ '</fieldset></div></section>';
+
+function promptHTML(it){
+  var p=esc(it.prompt);
+  if(it.prompt.indexOf('{}')<0)return p;
+  return p.replace('{}',it.noFill?'…':'<span class="blank">______</span>');
+}
+function rowHTML(it){
+  var opts=it.opts.map(function(t,i){
+    return '<label class="opt"><input type="radio" name="'+it.id+'" value="'+i+'">'+
+      (it.stack?'<b class="ltr">'+String.fromCharCode(65+i)+'</b>':'')+'<span>'+esc(t)+'</span></label>';
+  }).join('');
+  return '<div class="q" data-id="'+it.id+'" data-st="open" role="group" aria-labelledby="p-'+it.id+'">'+
+    '<div class="q-head"><span class="num">'+it.n+'</span><p class="prompt" id="p-'+it.id+'">'+promptHTML(it)+'</p><span class="tag">'+esc(it.tag)+'</span></div>'+
+    '<div class="aud">'+spk(it.id+'-q','Question')+spk(it.id+'-o','Answers')+spk(it.id+'-a','Correct answer','ans',true)+'</div>'+
+    '<div class="opts'+(it.stack?' stack':'')+'">'+opts+'</div><p class="fb"></p></div>';
+}
+
+var main=document.getElementById('main'), jump=document.getElementById('jump'), html='', curCh=0, jhtml='';
+S.forEach(function(sec){
+  if(sec.ch!==curCh){curCh=sec.ch;
+    html+='<div class="chapter"><p class="kicker">'+CH[curCh][0]+'</p><h2>'+esc(CH[curCh][1])+'</h2><p class="chtopics">'+esc(CH[curCh][2])+'</p></div>';}
+  html+='<section class="act" id="act-'+sec.code+'"><header class="act-head"><span class="code">'+sec.code+'</span>'+
+    '<div class="act-titles"><h3>'+esc(sec.title)+'</h3><p class="topic"><span class="lbl">Topic</span> <mark>'+esc(sec.topic)+'</mark> · '+esc(sec.page)+'</p></div>'+
+    '<span class="sec-score"></span></header>'+
+    '<p class="instr">'+spk('inst-'+sec.code,'Listen to the instructions','',false,true)+'<span>'+esc(sec.instr)+'</span></p>'+
+    '<p class="hint" hidden><b>Hint:</b> '+esc(sec.hint)+'</p>'+
+    '<div class="qs">'+sec.items.map(rowHTML).join('')+'</div></section>';
+  if(sec.code==='4F')html+=WRITE;
+  jhtml+='<button type="button" data-go="'+sec.code+'" id="j-'+sec.code+'">'+sec.code+'</button>';
+});
+jhtml+='<button type="button" data-go="4G" id="j-4G">4G</button>';
+main.innerHTML=html;
+jump.innerHTML=jhtml;
+
+var ref={};
+items.forEach(function(it){
+  var root=main.querySelector('.q[data-id="'+it.id+'"]');
+  ref[it.id]={root:root,labels:[].slice.call(root.querySelectorAll('.opt')),inputs:[].slice.call(root.querySelectorAll('input')),
+    blank:root.querySelector('.blank'),fb:root.querySelector('.fb'),ans:root.querySelector('.spk.ans')};
+});
+S.forEach(function(sec){
+  var el=document.getElementById('act-'+sec.code);
+  sec.el={score:el.querySelector('.sec-score'),hint:el.querySelector('.hint'),jump:document.getElementById('j-'+sec.code)};
+});
+
+/* ---------- audio: pre-recorded British female voice, same on every device ---------- */
+var player=new Audio(); player.preload='none';
+var cur=null, noteEl=document.getElementById('note');
+function setNote(t){noteEl.textContent=t||'';noteEl.hidden=!t;}
+function clearUI(){if(cur){cur.btn.classList.remove('playing');cur.btn.setAttribute('aria-pressed','false');}cur=null;}
+function stopAudio(){try{player.pause();}catch(e){}clearUI();}
+function fail(id){if(cur&&cur.id===id){clearUI();setNote('The audio could not play. Turn the volume up, check your internet and try again.');}}
+function playBlobFallback(id){
+  if(!window.fetch){fail(id);return;}
+  fetch('audio/'+id+'.mp3').then(function(r){if(!r.ok)throw new Error('http');return r.blob();}).then(function(b){
+    if(!cur||cur.id!==id)return;
+    player.src=URL.createObjectURL(b);
+    var p=player.play(); if(p&&p.catch)p.catch(function(){fail(id);});
+  }).catch(function(){fail(id);});
+}
+function playClip(btn){
+  var id=btn.dataset.clip;
+  if(cur&&cur.btn===btn){stopAudio();return;}
+  stopAudio();setNote('');
+  cur={btn:btn,id:id,tried:false};
+  btn.classList.add('playing');btn.setAttribute('aria-pressed','true');
+  player.src='audio/'+id+'.mp3';
+  var p=player.play();
+  if(p&&p.catch)p.catch(function(){if(cur&&cur.id===id&&!cur.tried){cur.tried=true;playBlobFallback(id);}});
+}
+player.addEventListener('ended',clearUI);
+player.addEventListener('error',function(){if(cur&&!cur.tried){var id=cur.id;cur.tried=true;playBlobFallback(id);}else if(cur){fail(cur.id);}});
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('.spk');
+  if(b)playClip(b);
+});
+
+/* ---------- state ---------- */
+var state={attempt:0,phase:'answer',first:0,sel:{},st:{}};
+var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function go(el,block){if(el)el.scrollIntoView({behavior:rm?'auto':'smooth',block:block||'start'});}
+
+function reset(){
+  state.attempt=0;state.phase='answer';state.first=0;
+  items.forEach(function(it){state.sel[it.id]=null;state.st[it.id]='open';});
+  stopAudio();setNote('');
+  update();
+}
+function editable(it){return (state.st[it.id]==='open'&&state.phase==='answer')||state.st[it.id]==='redo';}
+function answered(it){return state.sel[it.id]!==null;}
+function isRight(it){var s=state.sel[it.id];return s!==null&&it.correct.indexOf(s)>=0;}
+
+function check(){
+  stopAudio();
+  items.forEach(function(it){if(editable(it))state.st[it.id]=isRight(it)?'right':'wrong';});
+  state.attempt++;
+  var wrong=items.filter(function(it){return state.st[it.id]==='wrong';}).length;
+  if(state.attempt===1)state.first=TOTAL-wrong;
+  state.phase=(wrong===0||state.attempt>=3)?'final':'review';
+  update();
+  go(document.getElementById('summary'),'start');
+}
+function redo(){
+  stopAudio();
+  items.forEach(function(it){if(state.st[it.id]==='wrong'){state.sel[it.id]=null;state.st[it.id]='redo';}});
+  state.phase='redo';
+  update();
+  var first=items.filter(function(it){return state.st[it.id]==='redo';})[0];
+  if(first)go(ref[first.id].root,'center');
+}
+
+/* ---------- render ---------- */
+function rate(n){var p=n/TOTAL;return p>=0.9?['Excellent','r-excellent']:(p>=0.7?['Passed','r-passed']:['Need more review','r-review']);}
+function update(){
+  items.forEach(function(it){
+    var r=ref[it.id],st=state.st[it.id],ed=editable(it),sel=state.sel[it.id],fin=state.phase==='final';
+    r.root.dataset.st=st;
+    r.labels.forEach(function(lab,i){
+      var t=it.opts[i],chosen=sel===t,ok=it.correct.indexOf(t)>=0,cls='opt';
+      if(chosen&&(st==='right'||st==='wrong'))cls+=ok?' ok':' bad';
+      else if(chosen)cls+=' on';
+      if(st==='wrong'&&fin&&ok&&!chosen)cls+=' rev';
+      if(!ed)cls+=' dis';
+      lab.className=cls;
+      r.inputs[i].checked=chosen;
+      r.inputs[i].disabled=!ed;
+    });
+    if(r.blank){
+      r.blank.textContent=sel||'______';
+      r.blank.className='blank'+(st==='right'?' ok':(st==='wrong'?' bad':''));
+    }
+    r.ans.hidden=!(st==='right'||(st==='wrong'&&fin));
+    var fb='';
+    if(st==='right')fb='✓ Correct';
+    else if(st==='wrong')fb=fin?'✕ Answer: '+fmt(it):'✕ Not quite. Press “Redo wrong answers” to try again.';
+    else if(st==='redo')fb='Try again.';
+    r.fb.textContent=fb;
+  });
+
+  var right=items.filter(function(it){return state.st[it.id]==='right';}).length;
+  var pending=items.filter(function(it){return state.st[it.id]==='wrong'||state.st[it.id]==='redo';});
+
+  S.forEach(function(sec){
+    var rs=sec.items.filter(function(it){return state.st[it.id]==='right';}).length;
+    var need=sec.items.some(function(it){return state.st[it.id]==='wrong'||state.st[it.id]==='redo';});
+    sec.el.score.textContent=state.attempt>=1?rs+' / '+sec.items.length:sec.items.length+' pts';
+    sec.el.hint.hidden=!((state.phase==='review'||state.phase==='redo')&&need);
+    sec.el.jump.className=state.attempt>=1?(need?'todo':'ok'):'';
+  });
+
+  var sum=document.getElementById('summary');
+  sum.hidden=state.attempt<1;
+  document.getElementById('score').textContent=right;
+  document.getElementById('total').textContent=TOTAL;
+  document.getElementById('first').textContent=state.first+' / '+TOTAL;
+  var rNow=rate(right),rFirst=rate(state.first);
+  var rEl=document.getElementById('rating');
+  rEl.textContent=rNow[0];rEl.className='rating '+rNow[1];
+  var rf=document.getElementById('firstRate');
+  rf.textContent='· '+rFirst[0];rf.className='rtag '+rFirst[1];
+  var used=state.phase==='redo'?state.attempt:Math.max(0,state.attempt-1);
+  document.getElementById('used').textContent=used+' of 2';
+  [].forEach.call(document.getElementById('pips').children,function(p,i){p.className='pip'+(i<used?' on':'');});
+  document.getElementById('fill').style.width=(right/TOTAL*100)+'%';
+  document.getElementById('meter').setAttribute('aria-label','Score '+right+' out of '+TOTAL);
+  var pct=right/TOTAL,msg='';
+  if(state.phase==='final'){
+    if(pending.length===0)msg='Perfect score! Well done, Eva.';
+    else if(pct>=0.85)msg='Great work. Study the answers shown in green and you are nearly there.';
+    else if(pct>=0.65)msg='Good effort. Read the Grammar Review for the topics below, then start again.';
+    else msg='Keep going. Read the Grammar Review for the topics below, then start again.';
+  }else if(state.phase==='review')msg='Look at the red answers. Read the hints, then press Redo.';
+  else if(state.phase==='redo')msg='Fix the yellow questions, then press Check again.';
+  document.getElementById('msg').textContent=msg;
+
+  var weak=[];
+  S.forEach(function(sec){
+    var n=sec.items.filter(function(it){return state.st[it.id]==='wrong'||state.st[it.id]==='redo';}).length;
+    if(n)weak.push('<li><button type="button" data-go="'+sec.code+'">'+sec.code+' · '+esc(sec.topic)+' · <b>'+n+' to fix</b></button></li>');
+  });
+  document.getElementById('weak').hidden=weak.length===0||state.attempt<1;
+  document.getElementById('weakList').innerHTML=weak.join('');
+
+  var bm=document.getElementById('barMsg'), btn=document.getElementById('go');
+  var ed=items.filter(editable), done=ed.filter(answered).length;
+  if(state.phase==='answer'){
+    bm.textContent=done+' of '+ed.length+' answered';
+    btn.textContent='Check my answers';btn.disabled=done<ed.length;
+  }else if(state.phase==='review'){
+    var left=3-state.attempt;
+    bm.textContent=pending.length+' wrong · '+left+(left===1?' redo chance':' redo chances')+' left';
+    btn.textContent='Redo wrong answers';btn.disabled=false;
+  }else if(state.phase==='redo'){
+    bm.textContent='Redo chance '+state.attempt+' of 2 · '+done+' of '+ed.length+' done';
+    btn.textContent='Check again';btn.disabled=done<ed.length;
+  }else{
+    bm.textContent='Final score '+right+' / '+TOTAL;
+    btn.textContent='Start again';btn.disabled=false;
+  }
+}
+
+/* ---------- events ---------- */
+main.addEventListener('change',function(e){
+  var inp=e.target;
+  if(!inp.matches||!inp.matches('.q input'))return;
+  var it=byId[inp.closest('.q').dataset.id];
+  if(!editable(it)){update();return;}
+  state.sel[it.id]=it.opts[+inp.value];
+  update();
+});
+document.getElementById('go').addEventListener('click',function(){
+  if(state.phase==='answer'||state.phase==='redo')check();
+  else if(state.phase==='review')redo();
+  else{reset();window.scrollTo({top:0,behavior:rm?'auto':'smooth'});}
+});
+function onJump(e){
+  var b=e.target.closest&&e.target.closest('[data-go]');
+  if(!b)return;
+  go(document.getElementById('act-'+b.dataset.go),'start');
+}
+jump.addEventListener('click',onJump);
+document.getElementById('weakList').addEventListener('click',onJump);
+
+document.getElementById('howTotal').textContent=TOTAL;
+reset();
+})();
+</script>
